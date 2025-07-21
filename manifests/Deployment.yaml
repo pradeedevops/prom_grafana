@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-prom-app
+  labels:
+    app: node-prom
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-prom
+  template:
+    metadata:
+      labels:
+        app: node-prom
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3000"
+    spec:
+      containers:
+        - name: node-prom
+          image: pradeepaanandh/node-prom-app
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
